@@ -251,6 +251,9 @@
     // FITUR KOMENTAR REAL-TIME
     function tampilkanKomentar() {
         const list = document.getElementById("comment-list");
+        const isAtBottom = list.scrollHeight - list.clientHeight <= list.scrollTop + 50;
+
+        
         fetch(databaseURL + fotoAktif + ".json")
         .then(response => response.json())
         .then(data => {
@@ -290,6 +293,7 @@
 
             
             list.innerHTML = htmlKomen;
+            if (isAtBottom) {
             list.scrollTop = list.scrollHeight;
         });
     }
