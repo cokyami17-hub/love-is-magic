@@ -219,6 +219,9 @@
     function checkPass() {
         var input = document.getElementById("pass-input").value;
         if (input === "23012026") {
+              
+        sessionStorage.setItem("isLoggedIn", "true"); 
+       
             lagu.play();
             document.getElementById("login-screen").style.display = "none";
             document.getElementById("page-profil").style.display = "block";
@@ -431,8 +434,20 @@ function kirimNotifUpdate() {
         notifTele("✅ Notif 'Update Foto' + Link sudah dikirim ke email Eka!");
         alert("Notif meluncur ke email Ayang! 🚀");
     }
-}
+    // Fungsi ini otomatis jalan saat halaman dibuka/di-refresh
+window.onload = function() {
+    if (sessionStorage.getItem("isLoggedIn") === "true") {
+        // Kalau data "isLoggedIn" ada, langsung buka profil tanpa login lagi
+        document.getElementById("login-screen").style.display = "none";
+        document.getElementById("page-profil").style.display = "block";
+        
+        // Opsional: Coba putar musik otomatis (beberapa browser mungkin memblokir ini)
+        lagu.play().catch(e => console.log("Musik butuh interaksi user dulu"));
+    }
+};
 
+}
+        
         
 
 </script>
