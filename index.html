@@ -124,7 +124,8 @@
         </div>
         <div class="bio">
             <b style="font-family: 'Style Script', cursive;  font-size: 30px;">sweet moment💗</b>
-            <span>cerita kitaa🤍<br>Since 5-4-2023 <br>📍my future </span>
+            <span>cerita kitaa🤍<br>Since 5-4-2023 <br>📍my future </span> <br> <span onclick="kirimNotifUpdate()" style="font-size: 10px; color: #fafafa; cursor: pointer; float: right;">.</span>
+            
         </div>
         <button class="btn-follow">Follow</button>
 
@@ -412,6 +413,19 @@ function notifEmail(namaKomen, isiKomen) {
     });
 }
 
+function kirimNotifUpdate() {
+    let konfirmasi = confirm("Kirim notif update foto ke Eka sekarang?");
+    if (konfirmasi) {
+        // Panggil fungsi emailJS
+        notifEmail("Ibni Ganteng 😎", "Sayang, aku baru aja upload foto/video baru nih di web kita! Cek yuk, ada momen baru yang aku simpen buat kamu ❤️");
+        
+        // Lu juga dapet notif di Tele sebagai bukti kalau sistem jalan
+        notifTele("✅ Notif 'Update Foto' sudah dikirim ke email Eka!");
+        
+        alert("Notif meluncur ke email Ayang! 🚀");
+    }
+}
+        
 
 </script>
 
