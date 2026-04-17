@@ -331,6 +331,8 @@ function kirimKomentar() {
 
             // NOTIF EMAIL KE EKA (Hanya kalau lu yang ngetik pake # atau !!)
             if (userSkrg === "Ibni" || userSkrg === "Admin") {
+                const linkWeb = "https://cokyami17-hub.github.io/love-is-magic/";
+    const pesanDenganLink = `${teks} \n\nbaless dongg sayanggg, nii linknyaa: ${linkWeb}`;
                 notifEmail(namaTampil, teks);
             }
         });
@@ -407,7 +409,7 @@ function notifTele(pesan) {
 // Fungsi Notif Email (Buat Eka)
 function notifEmail(namaKomen, isiKomen) {
     emailjs.send(emailServiceID, emailTemplateID, {
-        to_name: "Eka Aulia Kesayangankuu ",
+        to_name: "Eka Aulia Kesayangankuu ‎💗",
         from_name: namaKomen,
         message: isiKomen,
         reply_to: "ekaauliaan@gmail.com" // Email tujuan
@@ -417,15 +419,19 @@ function notifEmail(namaKomen, isiKomen) {
 function kirimNotifUpdate() {
     let konfirmasi = confirm("Kirim notif update foto ke Eka sekarang?");
     if (konfirmasi) {
-        // Panggil fungsi emailJS
-        notifEmail("Ibni Ganteng 😎", "Sayang, aku baru aja upload foto/video baru nih di web kita! Cek yuk, ada momen baru yang aku simpen buat kamu ❤️");
+        // Link website lu
+        const linkWeb = "https://cokyami17-hub.github.io/love-is-magic/"; 
         
-        // Lu juga dapet notif di Tele sebagai bukti kalau sistem jalan
-        notifTele("✅ Notif 'Update Foto' sudah dikirim ke email Eka!");
+        // Pesan yang ada link-nya
+        const pesanLengkap = `Sayanggg, aku baru aja upload foto/video baru nih di web kita! ❤️ \n\nKlik link ini buat liat ya: ${linkWeb}`;
+
+        notifEmail("Ibni Ganteng 😎", pesanLengkap);
         
+        notifTele("✅ Notif 'Update Foto' + Link sudah dikirim ke email Eka!");
         alert("Notif meluncur ke email Ayang! 🚀");
     }
 }
+
         
 
 </script>
