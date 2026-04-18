@@ -162,6 +162,8 @@ function tambahMomen() {
         // --- NOTIF EMAIL ---
         notifEmail("Ibni Ganteng 😎", `Sayang, ada momen baru di web kita! ❤️`);
 
+        notifTele(`✅ KONFIRMASI: Notif update sudah dikirim ke email ayang!`);
+
         alert("Momen tersimpan di Database! 🔥");
         
         // REFRESH HALAMAN
@@ -287,14 +289,4 @@ function kirimKomentar() {
             }
         });
     }
-}function kirimNotifUpdate() {
-    let konfirmasi = confirm("Kirim notif update foto ke Eka sekarang?");
-    if (konfirmasi) {
-        // Link website lu
-        const linkWeb = "https://cokyami17-hub.github.io/love-is-magic/"; 
-        
-        notifTele("✅ Notif 'Update Foto' + Link sudah dikirim ke email Eka!");
-        alert("Notif meluncur ke email Ayang! 🚀");
-    }
-
 }
