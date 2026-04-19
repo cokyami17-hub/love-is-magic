@@ -351,7 +351,7 @@ function kirimPesanDM() {
             notifEmail("Ibni Ganteng 😎", pesanEmail);
             
             // Konfirmasi ke Tele lu kalau email sudah meluncur
-            notifTele(`✅ Notif DM sudah dikirim ke email Eka!`);
+            notifTele(`✅ KONFIMASI: Notif DM sudah dikirim ke email Eka!`);
         }
         
     });
