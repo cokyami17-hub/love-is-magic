@@ -124,9 +124,6 @@ var lagu = document.getElementById("musik-utama");
 ‎        reply_to: "ekaauliaan@gmail.com" // Email tujuan yang bener sesuai kata lu
 ‎    }).then(() => {
 ‎        console.log("Email Meluncur!");
-}
-    (err) => {
-console.log("Gagal kirim email: ", err);
 ‎    });
 ‎}
 ‎
