@@ -299,11 +299,24 @@ function kirimKomentar() {
 
 }
 
-// Buka & Load Chat
 function bukaBoxPesan() {
+    // 1. Set tinggi layar asli (khusus mobile)
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+
+    // 2. Munculin modal
     document.getElementById('modal-pesan').style.display = 'block';
+    
+    // 3. Scroll ke bawah biar chat terbaru keliatan
     loadPesanDM();
+
+    // 4. Tambahin event listener biar pas keyboard naik, dia ngitung ulang
+    window.addEventListener('resize', () => {
+        let vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+    });
 }
+
 
 // Kirim Pesan (Bisa Ibni, Bisa Eka)
 function kirimPesanDM() {
