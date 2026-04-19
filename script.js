@@ -240,6 +240,8 @@ function tampilkanKomentar() {
                     <div ondblclick="hapusKomentar('${key}')">
                         <b style="font-family: 'Style Script', cursive; font-size: 18px; color: ${warnaNama};">${userSkrg}</b> 
                         <span style="font-size: 13px;">${item.teks}</span>
+                        onclick="balasKomen('${userSkrg}')" style="font-size: 11px; color: #8e8e8e; font-weight: bold; cursor: pointer; margin-left: 2px;">Balas</span>
+                        
                     </div>
                 </div>`;
         });
