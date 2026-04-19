@@ -102,286 +102,171 @@ var lagu = document.getElementById("musik-utama");
     }
 }
 
-// --- KONFIGURASI NOTIF ---
-const teleToken = "8558797937:AAHPZs_R0bn6R6kLu0qW2g1cbVOLoqB57IM";
-const teleChatID = "1865257904";
-const emailServiceID = "service_6ssczri";
-const emailTemplateID = "template_z4t2k8j";
-
-// Fungsi Notif Telegram (Buat Lu)
-function notifTele(pesan) {
-    const url = `https://api.telegram.org/bot${teleToken}/sendMessage?chat_id=${teleChatID}&text=${encodeURIComponent(pesan)}`;
-    fetch(url);
+‎// --- KONFIGURASI NOTIF FIX (EMAIL: ekaauliaan@gmail.com) ---
+‎const teleToken = "8558797937:AAHPZs_R0bn6R6kLu0qW2g1cbVOLoqB57IM";
+‎const teleChatID = "1865257904";
+‎const emailServiceID = "service_6ssczri";
+‎const emailTemplateID = "template_z4t2k8j";
+‎
+‎// 1. Fungsi Notif Telegram (Buat Lu)
+‎function notifTele(pesan) {
+‎    const url = `https://api.telegram.org/bot${teleToken}/sendMessage?chat_id=${teleChatID}&text=${encodeURIComponent(pesan)}`;
+‎    fetch(url);
+‎}
+‎
+‎// 2. SATU FUNGSI EMAIL UNTUK SEMUA (Upload, Komen, DM)
+‎function kirimEmailKeEka(subjek, isiPesan, foto = "Momen Kita") {
+‎    emailjs.send(emailServiceID, emailTemplateID, {
+‎        to_name: "Eka Aulia Kesayangankuu 💗",
+‎        from_name: subjek,
+‎        message: isiPesan,
+‎        foto_url: foto,
+‎        reply_to: "ekaauliaan@gmail.com" // Email tujuan yang bener sesuai kata lu
+‎    }).then(() => {
+‎        console.log("Email Meluncur!");
 }
-
-// Fungsi Notif Email (Buat Eka)
-function notifEmail(namaKomen, isiKomen) {
-    emailjs.send(emailServiceID, emailTemplateID, {
-        to_name: "Eka Aulia Kesayangankuu 💗",
-        from_name: namaKomen,
-        message: isiKomen,
-        reply_to: "ekaauliaan@gmail.com" // Email tujuan
-    });
-}
-
-
-// --- FITUR OTOMATIS BARU IBNI ---
-
-// 1. Fungsi Buka Panel Admin (Pake Password)
-function bukaAdmin() {
-    if(prompt("Password Admin:") === "23012026") {
-        document.getElementById("admin-panel").style.display = "block";
-        alert("Panel Admin Terbuka! Lu bisa tambah momen tanpa ngoding lagi.");
-    }
-}
-
-// 2. Fungsi Simpan Momen ke Firebase Database (Gratis)
-function tambahMomen() {
-    const fName = document.getElementById("inp-filename").value; // Gua ganti biar singkat
-    const fCap = document.getElementById("inp-cap").value;
-    const fType = document.getElementById("inp-type").value;
-
-    if(!fName || !fCap) return alert("Isi dulu semua datanya, Ibni!");
-
-    // Biar gak dipencet berkali-kali, kita disable tombolnya
-    const btn = document.querySelector("button[onclick='tambahMomen()']");
-    if(btn) btn.disabled = true;
-
-    fetch(databaseURL + "posts.json", {
-        method: "POST",
-        body: JSON.stringify({
-            url: fName,
-            cap: fCap,
-            type: fType,
-            t: Date.now()
-        })
-    }).then(() => {
-        // --- NOTIF TELEGRAM (Variabel sudah disesuaikan) ---
-        notifTele(`📸 Momen Baru Berhasil Diupload!\n\nJudul: ${fCap}\nFile: ${fName}`);
-
-        // --- NOTIF EMAIL ---
-        notifEmail("Ibni Ganteng 😎", `Sayang, ada momen baru di web kita! ❤️`);
-
-        alert("Momen tersimpan di Database! 🔥");
-        
-        // REFRESH HALAMAN
-        location.reload(); 
-    }).catch(err => {
-        alert("Gagal simpan: " + err);
-        if(btn) btn.disabled = false;
-    });
-}
-
-
-// 3. Fungsi Load Grid Otomatis (VERSI FIX PINTU SURAT)
-function loadGridOtomatis() {
-    fetch(databaseURL + "posts.json")
-    .then(r => r.json())
-    .then(data => {
-        const grid = document.getElementById("main-grid");
-        const postCount = document.getElementById("post-count");
-        
-        if(!data) {
-            grid.innerHTML = "<p style='padding:20px; color:gray; text-align:center;'>Belum ada momen...</p>";
-            if(postCount) postCount.innerText = "0";
-            return;
-        }
-        
-        const jumlahPost = Object.keys(data).length;
-        if(postCount) postCount.innerText = jumlahPost;
-
-        let html = "";
-        Object.keys(data).reverse().forEach(key => {
-            const item = data[key];
-            const isVid = item.type === "video" || item.url.includes(".mp4");
-            
-            // --- LOGIKA PINTU SURAT DISINI ---
-            let aksiKlik = `bukaModal('${item.url}', '${item.cap}', ${isVid})`;
-            
-            if (item.cap === "PINTU_SURAT") {
-                aksiKlik = `masukKeSurat()`; // Kalau captionnya PINTU_SURAT, pindah halaman
-            }
-            // ---------------------------------
-            
-            html += `
-                <div class="photo-item" onclick="${aksiKlik}">
-                    ${isVid ? `<video src="${item.url}" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover;"></video>` : `<img src="${item.url}">`}
-                </div>`;
-        });
-        grid.innerHTML = html;
-    });
-}
-
-
-
-
-// 4. Update Fungsi Komentar (Versi 3 Nama: Ibni, Eka, Sweet Moment)
-function tampilkanKomentar() {
-    const list = document.getElementById("comment-list");
-    fetch(databaseURL + fotoAktif + ".json")
-    .then(response => response.json())
-    .then(data => {
-        if (!data) {
-            list.innerHTML = '<p style="color: #8e8e8e; font-size: 13px;">Belum ada komentar...</p>';
-            return;
-        }
-        let htmlKomen = "";
-        Object.keys(data).forEach(key => {
-            const item = data[key];
-            let userSkrg = "Eka Aulia 💖", warnaNama = "#262626";
-            
-            if (item.user === "Ibni") { userSkrg = "Ibni Ganteng 😎"; warnaNama = "#0095f6"; }
-            else if (item.user === "Admin") { userSkrg = "sweet moment💗"; }
-
-            htmlKomen += `
-                <div style="margin-bottom: 12px; font-size: 14px; text-align: left;">
-                    <div ondblclick="hapusKomentar('${key}')">
-                        <b style="font-family: 'Style Script', cursive; font-size: 18px; color: ${warnaNama};">${userSkrg}</b> 
-                        <span style="font-size: 13px;">${item.teks}</span>
-                    </div>
-                </div>`;
-        });
-        list.innerHTML = htmlKomen;
-        list.scrollTop = list.scrollHeight;
-    });
-}
-
-// Panggil fungsi grid saat web pertama kali dibuka
-loadGridOtomatis();
-
-// 5. Fungsi Kirim Komentar (Notif Tele & Email dengan Link)
-function kirimKomentar() {
-    const input = document.getElementById("input-komen");
-    let teks = input.value.trim();
-    if (teks !== "") {
-        let userSkrg = "Ayang"; // Default
-        let namaTampil = "Eka Aulia 💖"; // Nama buat notif
-
-        // LOGIKA KODE RAHASIA
-        if (teks.startsWith("#")) {
-            userSkrg = "Ibni";
-            namaTampil = "Ibni Ganteng 😎";
-            teks = teks.substring(1);
-        } else if (teks.startsWith("!!")) {
-            userSkrg = "Admin";
-            namaTampil = "sweet moment💗";
-            teks = teks.substring(2);
-        }
-
-        fetch(databaseURL + fotoAktif + ".json", {
-            method: "POST",
-            body: JSON.stringify({ user: userSkrg, teks: teks, t: Date.now() })
-        }).then(() => {
-            input.value = "";
-            tampilkanKomentar();
-
-            // NOTIF TELEGRAM (Buat Lu)
-            notifTele(`🔔 Komen Baru!\n\n${namaTampil} bilang: "${teks}"\ndi foto: ${fotoAktif}`);
-
-            // NOTIF EMAIL KE EKA (Kirim link biar dia langsung klik)
-            if (userSkrg === "Ibni" || userSkrg === "Admin") {
-                const linkWeb = "https://cokyami17-hub.github.io/love-is-magic/";
-                const pesanLengkap = `${teks} \n\nbaless dongg sayanggg, nii linknyaa: ${linkWeb}`;
-                
-                notifEmail(namaTampil, pesanLengkap);
-            }
-        });
-    }
-}function kirimNotifUpdate() {
-    let konfirmasi = confirm("Kirim notif update foto ke Eka sekarang?");
-    if (konfirmasi) {
-        // Link website lu
-        const linkWeb = "https://cokyami17-hub.github.io/love-is-magic/"; 
-        
-        notifTele("✅ Notif 'Update Foto' + Link sudah dikirim ke email Eka!");
-        alert("Notif meluncur ke email Ayang! 🚀");
-    }
-
-}
-
-function bukaBoxPesan() {
-    // 1. Set tinggi layar asli (khusus mobile)
-    let vh = window.innerHeight * 0.01;
-    document.documentElement.style.setProperty('--vh', `${vh}px`);
-
-    // 2. Munculin modal
-    document.getElementById('modal-pesan').style.display = 'block';
-    
-    // 3. Scroll ke bawah biar chat terbaru keliatan
-    loadPesanDM();
-
-    // 4. Tambahin event listener biar pas keyboard naik, dia ngitung ulang
-    window.addEventListener('resize', () => {
-        let vh = window.innerHeight * 0.01;
-        document.documentElement.style.setProperty('--vh', `${vh}px`);
-    });
-}
-
-
-// Kirim Pesan (Bisa Ibni, Bisa Eka)
-function kirimPesanDM() {
-    const input = document.getElementById("isi-pesan-eka");
-    let teks = input.value;
-    if(!teks) return;
-
-    let pengirim = "Eka Aulia";
-    // Trik buat Ibni: Kalau awali pesan pake '#', berarti itu balasan lu
-    if(teks.startsWith("#")) {
-        pengirim = "Ibni";
-        teks = teks.substring(1);
-    }
-
-    fetch(databaseURL + "pesan_rahasia.json", {
-        method: "POST",
-        body: JSON.stringify({
-            u: pengirim,
-            m: teks,
-            t: Date.now()
-        })
-    }).then(() => {
-        input.value = "";
-        loadPesanDM();
-        // Notif ke Tele tetep jalan biar lu tau ada pesan baru
-        notifTele(`📩 DM BARU!\nDari: ${pengirim}\nIsi: "${teks}"`);
-          // 2. NOTIF KE EMAIL EKA (Hanya kalau Ibni yang bales)
-        if(emailKeEka) {
-            const linkWeb = "https://cokyami17-hub.github.io/love-is-magic/";
-            const pesanEmail = `Sayang, adaa DM rahasia nih.. ❤️\nCek di sini ya: ${linkWeb}`;
-            
-            notifEmail("Ibni Ganteng 😎", pesanEmail);
-            
-            // Konfirmasi ke Tele lu kalau email sudah meluncur
-            notifTele(`✅ KONFIMASI: Notif DM sudah dikirim ke email Eka!`);
-        }
-        
-    });
-}
-
-// Tampilkan Pesan ala DM Instagram
-function loadPesanDM() {
-    fetch(databaseURL + "pesan_rahasia.json")
-    .then(r => r.json())
-    .then(data => {
-        const container = document.getElementById("chat-container");
-        if(!data) return container.innerHTML = "<p style='text-align:center; color:gray;'>Mulai obrolan rahasia...</p>";
-        
-        let html = "";
-        Object.keys(data).forEach(key => {
-            const item = data[key];
-            const isMe = item.u === "Ibni"; // Cek siapa yang kirim
-            
-            html += `
-                <div style="display:flex; flex-direction:column; align-items: ${isMe ? 'flex-end' : 'flex-start'};">
-                    <div style="max-width:80%; padding:8px 12px; border-radius:18px; font-size:14px; 
-                        background: ${isMe ? '#0095f6' : '#efefef'}; 
-                        color: ${isMe ? '#fff' : '#000'};">
-                        ${item.m}
-                    </div>
-                    <span style="font-size:10px; color:gray; margin:2px 5px;">${new Date(item.t).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
-                </div>`;
-        });
-        container.innerHTML = html;
-        container.scrollTop = container.scrollHeight;
-    });
-}
-
+    (err) => {
+console.log("Gagal kirim email: ", err);
+‎    });
+‎}
+‎
+‎// 3. Fungsi Simpan Momen (Update Foto)
+‎function tambahMomen() {
+‎    const fName = document.getElementById("inp-filename").value;
+‎    const fCap = document.getElementById("inp-cap").value;
+‎    const fType = document.getElementById("inp-type").value;
+‎    if(!fName || !fCap) return alert("Isi dulu datanya!");
+‎
+‎    const btn = document.querySelector("button[onclick='tambahMomen()']");
+‎    if(btn) btn.disabled = true;
+‎
+‎    fetch(databaseURL + "posts.json", {
+‎        method: "POST",
+‎        body: JSON.stringify({ url: fName, cap: fCap, type: fType, t: Date.now() })
+‎    }).then(() => {
+‎        notifTele(`📸 Momen Baru: ${fCap}`);
+‎        kirimEmailKeEka("Ibni Ganteng 😎", `Sayang, ada momen baru di web kita! ❤️\nCek ya: https://cokyami17-hub.github.io/love-is-magic/`, fName);
+‎        alert("Momen tersimpan!");
+‎        location.reload(); 
+‎    });
+‎}
+‎
+‎// 4. Fungsi Kirim Komentar
+‎function kirimKomentar() {
+‎    const input = document.getElementById("input-komen");
+‎    let teks = input.value.trim();
+‎    if (teks !== "") {
+‎        let userSkrg = "Ayang";
+‎        let namaTampil = "Eka Aulia 💖";
+‎
+‎        if (teks.startsWith("#")) {
+‎            userSkrg = "Ibni";
+‎            namaTampil = "Ibni Ganteng 😎";
+‎            teks = teks.substring(1);
+‎        } else if (teks.startsWith("!!")) {
+‎            userSkrg = "Admin";
+‎            namaTampil = "sweet moment💗";
+‎            teks = teks.substring(2);
+‎        }
+‎
+‎        fetch(databaseURL + fotoAktif + ".json", {
+‎            method: "POST",
+‎            body: JSON.stringify({ user: userSkrg, teks: teks, t: Date.now() })
+‎        }).then(() => {
+‎            input.value = "";
+‎            tampilkanKomentar();
+‎            notifTele(`🔔 Komen Baru!\n\n${namaTampil} bilang: "${teks}"`);
+‎
+‎            if (userSkrg === "Ibni" || userSkrg === "Admin") {
+‎                const linkWeb = "https://cokyami17-hub.github.io/love-is-magic/";
+‎                kirimEmailKeEka(namaTampil, `${teks} \n\nCek di sini: ${linkWeb}`, fotoAktif);
+‎            }
+‎        });
+‎    }
+‎}
+‎
+‎// --- FITUR PESAN RAHASIA (DM) ---
+‎
+‎// 1. Fungsi Buka Modal & Load Pesan
+‎function bukaBoxPesan() {
+‎    // Set tinggi layar asli (fix buat Chrome/Safari Mobile)
+‎    let vh = window.innerHeight * 0.01;
+‎    document.documentElement.style.setProperty('--vh', `${vh}px`);
+‎
+‎    document.getElementById('modal-pesan').style.display = 'block';
+‎    loadPesanDM(); // Langsung load pesannya pas dibuka
+‎
+‎    // Update tinggi kalau layar berubah (keyboard naik)
+‎    window.addEventListener('resize', () => {
+‎        let vh = window.innerHeight * 0.01;
+‎        document.documentElement.style.setProperty('--vh', `${vh}px`);
+‎    });
+‎}
+‎
+‎// 2. Fungsi Kirim Pesan DM
+‎function kirimPesanDM() {
+‎    const input = document.getElementById("isi-pesan-eka");
+‎    let teks = input.value.trim();
+‎    if(!teks) return;
+‎
+‎    let pengirim = "Eka Aulia";
+‎    let buatEmail = false;
+‎
+‎    // Cek kalau lu yang bales (pake tanda #)
+‎    if(teks.startsWith("#")) {
+‎        pengirim = "Ibni";
+‎        teks = teks.substring(1);
+‎        buatEmail = true;
+‎    }
+‎
+‎    fetch(databaseURL + "pesan_rahasia.json", {
+‎        method: "POST",
+‎        body: JSON.stringify({ u: pengirim, m: teks, t: Date.now() })
+‎    }).then(() => {
+‎        input.value = "";
+‎        loadPesanDM();
+‎        
+‎        // Notif ke Telegram Lu
+‎        notifTele(`📩 DM DARI: ${pengirim}\nIsi: "${teks}"`);
+‎
+‎        // Notif ke Email Eka (Kalau Ibni yang bales)
+‎        if(buatEmail) {
+‎            const linkWeb = "https://cokyami17-hub.github.io/love-is-magic/";
+‎            kirimEmailKeEka("Ibni Ganteng 😎", `Sayang, aku baru aja bales DM rahasia kamu nih.. ❤️\nCek ya: ${linkWeb}`);
+‎            notifTele(`✅ KONFIRMASI: Email notif DM sudah dikirim ke ekaauliaan@gmail.com!`);
+‎        }
+‎    });
+‎}
+‎
+‎// 3. Fungsi Tampilkan Chat
+‎function loadPesanDM() {
+‎    fetch(databaseURL + "pesan_rahasia.json")
+‎    .then(r => r.json())
+‎    .then(data => {
+‎        const container = document.getElementById("chat-container");
+‎        if(!data) {
+‎            container.innerHTML = "<p style='text-align:center; color:gray; font-size:13px; margin-top:20px;'>Mulai obrolan rahasia...</p>";
+‎            return;
+‎        }
+‎        
+‎        let html = "";
+‎        Object.keys(data).forEach(key => {
+‎            const item = data[key];
+‎            const isMe = item.u === "Ibni"; 
+‎            
+‎            html += `
+‎                <div style="display:flex; flex-direction:column; align-items: ${isMe ? 'flex-end' : 'flex-start'}; margin-bottom:10px;">
+‎                    <div style="max-width:80%; padding:8px 12px; border-radius:18px; font-size:14px; 
+‎                        background: ${isMe ? '#0095f6' : '#efefef'}; 
+‎                        color: ${isMe ? '#white' : '#000'}; 
+‎                        border-bottom-${isMe ? 'right' : 'left'}-radius: 2px;">
+‎                        ${item.m}
+‎                    </div>
+‎                    <span style="font-size:9px; color:gray; margin-top:2px;">${new Date(item.t).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+‎                </div>`;
+‎        });
+‎        container.innerHTML = html;
+‎        container.scrollTop = container.scrollHeight; // Auto scroll ke bawah
+‎    });
+‎}
+‎
