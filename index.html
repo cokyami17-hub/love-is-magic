@@ -18,6 +18,9 @@
   :root {
     --vh: 1vh;
   }
+        #modal-pesan {
+    z-index: 99999 !important; /* Biar paling depan */
+  }
   
   /* Pastikan modal pesan lu pake variabel vh ini */
   #modal-pesan > div {
@@ -97,14 +100,6 @@
         <div class="photo-grid">
     <div id="main-grid" style="display: contents;"></div>
 
-    <div class="photo-item" onclick="masukKeSurat()">
-        <video src="video_ayang.mp4" autoplay loop muted playsinline 
-               style="width: 100%; height: 100%; object-fit: cover;"></video>
-    </div>
-
-
-        
-            
             </div>
         </div>
     </div>
