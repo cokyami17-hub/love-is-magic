@@ -15,26 +15,37 @@ function putarMusik() { if(lagu) lagu.play().catch(e => console.log("Wait user")
 
 function checkPass() {
     var input = document.getElementById("pass-input").value;
+    
+    // --- JALAN RAHASIA KHUSUS IBNI ---
+    if (input === "#ibni") {
+        localStorage.setItem('role_web', 'Ibni'); // Permanenin role lu di browser
+        input = "23012026"; // Otomatis nembusin password utama
+    }
+    // ---------------------------------
+
     if (input === "23012026") {
         if(lagu) { lagu.play(); lagu.volume = 1.0; }
         document.getElementById("login-screen").style.display = "none";
         document.getElementById("page-profil").style.display = "block";
         loadGridOtomatis();
         setInterval(cekStatusPesan, 3000); 
-// --- TAMBAHAN TRACKING LOGIN MULAI DI SINI ---
+
+        // --- TAMBAHAN TRACKING LOGIN ---
         let userAgent = navigator.userAgent;
         let deviceType = /Mobile|Android|iP(hone|od|ad)/i.test(userAgent) ? "HP 📱" : "Laptop/PC 💻";
         
-        // Cuma kirim notif kalau bukan lu yang login (ngecek dari role)
+        // Cuma kirim notif kalau bukan lu yang login
         let siapa = localStorage.getItem('role_web') || 'Eka';
         if (siapa !== 'Ibni') {
             notifTele(`🚨 NOTIF LOGIN:\nAyang baru aja buka web Sweet Moment cuy!\nDevice: ${deviceType} 💕`);
         }
         // --- BATAS TAMBAHAN TRACKING ---
+        
     } else {
         document.getElementById("pesan-error").style.display = "block";
     }
 }
+
 
 // 2. TABS
 function bukaTab(tab) {
