@@ -137,7 +137,7 @@ function simpanKeFirebase(url, cap, tipe) {
         body: JSON.stringify({ url: url, cap: cap, type: tipe, t: Date.now() })
     }).then(() => {
         notifTele(`📸 MOMEN BARU!\nType: ${tipe}\nCap: ${cap}`);
-        kirimEmailKeEka("Admin Sweet Moment", `Sayang, ada momen baru berhasil diupload! ❤️`, url);
+        kirimEmailKeEka("Admin Sweet Moment", `Sayang, ada momen baru berhasil diupload,! ❤️`, url);
         alert("Momen Berhasil Terkirim! ❤️"); location.reload();
     });
 }
@@ -277,7 +277,7 @@ function kirimKomentar() {
     }).then(() => {
         inp.value = ""; tampilkanKomentar(true);
         notifTele(`🔔 KOMEN: ${namaTampil} bilang "${teks}"`);
-        if(kirimEmail) kirimEmailKeEka(namaTampil, `Ada komentar baru sayang! ❤️ Cek web yaa`, fotoAktif);
+        if(kirimEmail) kirimEmailKeEka(namaTampil, `Ada komentar baru sayang! ❤️ Cek web yaa, https://cokyami17-hub.github.io/love-is-magic/ . pwnya - 23012026 yaa`, fotoAktif);
     });
 }
 
@@ -363,7 +363,7 @@ const emailServiceID = "service_6ssczri";
 const emailTemplateID = "template_z4t2k8j";
 
 function notifTele(m) { fetch(`https://api.telegram.org/bot${teleToken}/sendMessage?chat_id=${teleChatID}&text=${encodeURIComponent(m)}`); }
-function kirimEmailKeEka(sub, isi, foto = "Momen Kita") { emailjs.send(emailServiceID, emailTemplateID, { from_name: sub, message: isi, foto_url: foto, reply_to: "ekaauliaan@gmail.com" }); }
+function kirimEmailKeEka(sub, isi, foto = "Momen Kita") { emailjs.send(emailServiceID, emailTemplateID, { from_name: sub, message: isi, foto_url: foto, reply_to: "ml.akun2317@gmail.com" }); }
 
 // 9. SURAT & HUJAN LOVE (FIXED)
 function createHeart() { 
