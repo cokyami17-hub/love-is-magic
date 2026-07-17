@@ -137,7 +137,7 @@ function simpanKeFirebase(url, cap, tipe) {
         body: JSON.stringify({ url: url, cap: cap, type: tipe, t: Date.now() })
     }).then(() => {
         notifTele(`📸 MOMEN BARU!\nType: ${tipe}\nCap: ${cap}`);
-        kirimEmailKeEka("Admin Sweet Moment", `Sayang, ada momen baru berhasil diupload,! ❤️`, url);
+        kirimEmailKeEka("Admin Sweet Moment", `Sayang, ada momen baru berhasil diupload!❤️ cek web yaa, https://cokyami17-hub.github.io/love-is-magic/ . pwnya - 23012026 yaa `, url);
         alert("Momen Berhasil Terkirim! ❤️"); location.reload();
     });
 }
