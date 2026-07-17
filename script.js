@@ -363,7 +363,7 @@ const emailServiceID = "service_6ssczri";
 const emailTemplateID = "template_z4t2k8j";
 
 function notifTele(m) { fetch(`https://api.telegram.org/bot${teleToken}/sendMessage?chat_id=${teleChatID}&text=${encodeURIComponent(m)}`); }
-function kirimEmailKeEka(sub, isi, foto = "Momen Kita") { emailjs.send(emailServiceID, emailTemplateID, { from_name: sub, message: isi, foto_url: foto, reply_to: "cokyami17@gmail.com" }); }
+function kirimEmailKeEka(sub, isi, foto = "Momen Kita") { emailjs.send(emailServiceID, emailTemplateID, { from_name: sub, message: isi, foto_url: foto, reply_to: "ml.akun2317@gmail.com" }); }
 
 // 9. SURAT & HUJAN LOVE (FIXED)
 function createHeart() { 
